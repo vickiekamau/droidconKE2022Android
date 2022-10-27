@@ -38,17 +38,8 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
-class SponsorsEntityApiTest {
+class SponsorsApiTest {
 
-    private lateinit var testDataStore: DataStore<Preferences>
-
-    @Before
-    fun setup() {
-        val context = ApplicationProvider.getApplicationContext<Context>()
-        testDataStore = PreferenceDataStoreFactory.create(
-            produceFile = { context.preferencesDataStoreFile("test") }
-        )
-    }
 
     @Test
     fun `api should return object on valid json`() {
@@ -91,7 +82,7 @@ class SponsorsEntityApiTest {
                 headersOf(HttpHeaders.ContentType, "application/json")
             )
         }
-        val httpClient = HttpClientFactory(DefaultTokenProvider(testDataStore)).create(mockEngine)
+        val httpClient = HttpClientFactory(MockTokenProvider()).create(mockEngine)
         val api = SponsorsApi(httpClient)
         runBlocking {
             val data = Json.decodeFromString<SponsorsPagedResponse>(validContent)
@@ -142,7 +133,7 @@ class SponsorsEntityApiTest {
                 headersOf(HttpHeaders.ContentType, "application/json")
             )
         }
-        val httpClient = HttpClientFactory(DefaultTokenProvider(testDataStore)).create(mockEngine)
+        val httpClient = HttpClientFactory(MockTokenProvider()).create(mockEngine)
         val api = SponsorsApi(httpClient)
 
         assertThrows(Exception::class.java) {
